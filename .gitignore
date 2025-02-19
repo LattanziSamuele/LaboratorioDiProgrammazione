@@ -1,0 +1,16 @@
+
+cmake-build-*/
+
+.idea/
+
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.lib
+*.so
+*.dll
+
+*.log
+*.tmp
