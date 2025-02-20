@@ -117,7 +117,6 @@ void removeItemFromShoppingList() {
 
     try {
         loggedInUser->getShoppingList(listName)->removeItem(itemName);
-        //std::cout << "Item '" << itemName << "' rimosso dalla lista '" << listName << "'.\n";
     } catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << "\n";
     }
@@ -138,7 +137,6 @@ void toggleItemPurchased() {
 
     try {
         loggedInUser->getShoppingList(listName)->toggleItemPurchased(itemName);
-        //std::cout << "Stato di acquisto dell'item '" << itemName << "' modificato.\n";
     } catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << "\n";
     }
@@ -202,7 +200,6 @@ void updateItemQuantity() {
 
     try {
         loggedInUser->getShoppingList(listName)->updateItemQuantity(itemName, newQuantity);
-        //std::cout << "Quantita' dell'item '" << itemName << "' aggiornata a " << newQuantity << ".\n";
     } catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << "\n";
     }
@@ -224,7 +221,6 @@ void shareShoppingList() {
     auto it = registeredUsers.find(otherUserName);
     if (it != registeredUsers.end()) {
         loggedInUser->shareShoppingList(*it->second, listName);
-        //std::cout << "Lista condivisa con l'utente '" << otherUserName << "'.\n";
     } else {
         std::cout << "Utente non trovato.\n";
     }

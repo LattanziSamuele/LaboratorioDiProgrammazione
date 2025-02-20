@@ -4,7 +4,6 @@
 #include <gtest/gtest.h>
 #include "../ShoppingList.h"
 
-// Test fixture per ShoppingList
 class ShoppingListTest : public ::testing::Test {
 protected:
     std::shared_ptr<ShoppingList> shoppingList;
