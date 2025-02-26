@@ -36,4 +36,10 @@ TEST_F(UserTest, ShareShoppingList) {
     user.shareShoppingList(otherUser, "Spesa");
     ASSERT_EQ(otherUser.printShoppingLists(), "Liste della spesa dell'utente 'AltroUtente':\n- Spesa\n");
 }
+TEST_F(UserTest, ExistsShoppingList) {
+    ASSERT_TRUE(user.existsShoppingList("Spesa"));
+    ASSERT_FALSE(user.existsShoppingList("Casa"));
+    user.addShoppingList(std::make_shared<ShoppingList>("Casa"));
+    ASSERT_TRUE(user.existsShoppingList("Casa"));
+}
 
