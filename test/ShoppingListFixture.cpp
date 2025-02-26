@@ -21,39 +21,66 @@ protected:
 
 TEST_F(ShoppingListTest, AddItem) {
     shoppingList->addItem("Pera", "Frutta", 6);
-    ASSERT_EQ(shoppingList->printAllItems(), "Nome: Mela, Categoria: Frutta, Quantita': 5, Acquistato: No\n"
+    ASSERT_EQ(shoppingList->toString(), "Nome: Mela, Categoria: Frutta, Quantita': 5, Acquistato: No\n"
                                              ", Numero di Item non acquistati: 2\n"
                                              "Nome: Pera, Categoria: Frutta, Quantita': 6, Acquistato: No\n"
                                              ", Numero di Item non acquistati: 2\n");
 
     shoppingList->addItem("Mela", "Frutta", 3);
-    ASSERT_EQ(shoppingList->printAllItems(), "Nome: Mela, Categoria: Frutta, Quantita': 8, Acquistato: No\n"
+    ASSERT_EQ(shoppingList->toString(), "Nome: Mela, Categoria: Frutta, Quantita': 8, Acquistato: No\n"
                                              ", Numero di Item non acquistati: 2\n"
                                              "Nome: Pera, Categoria: Frutta, Quantita': 6, Acquistato: No\n"
                                              ", Numero di Item non acquistati: 2\n");
 }
 
 TEST_F(ShoppingListTest, RemoveExistingItem) {
-    shoppingList->removeItem("Mela");
-    ASSERT_EQ(shoppingList->printAllItems(), "");
+    ASSERT_TRUE(shoppingList->removeItem("Mela"));
+    ASSERT_EQ(shoppingList->toString(), "");
 }
 
 TEST_F(ShoppingListTest, RemoveNonExistingItem) {
-    EXPECT_THROW(shoppingList->removeItem("Pera"), std::invalid_argument);
+    ASSERT_FALSE(shoppingList->removeItem("Pera"));
+}
+
+TEST_F(ShoppingListTest, ToggleItemPurchased) {
+    ASSERT_TRUE(shoppingList->toggleItemPurchased("Mela"));
+    ASSERT_TRUE(shoppingList->toggleItemPurchased("Mela"));
+    ASSERT_FALSE(shoppingList->toggleItemPurchased("Pera"));
 }
 
 TEST_F(ShoppingListTest, UpdateItemQuantity) {
     shoppingList->updateItemQuantity("Mela", 10);
-    ASSERT_EQ(shoppingList->printAllItems(), "Nome: Mela, Categoria: Frutta, Quantita': 10, Acquistato: No\n, Numero di Item non acquistati: 1\n");
+    ASSERT_EQ(shoppingList->toString(), "Nome: Mela, Categoria: Frutta, Quantita': 10, Acquistato: No\n, Numero di Item non acquistati: 1\n");
 
     shoppingList->updateItemQuantity("Mela", 0);
-    EXPECT_EQ(shoppingList->printAllItems(), "");
+    EXPECT_EQ(shoppingList->toString(), "");
 
     EXPECT_THROW(shoppingList->updateItemQuantity("Mela", 5), std::invalid_argument);
 
     shoppingList->addItem("Banana", "Frutta", 3);
     EXPECT_THROW(shoppingList->updateItemQuantity("Banana", -1), std::invalid_argument);
 }
+TEST_F(ShoppingListTest, CountAllItems) {
+    ASSERT_EQ(shoppingList->countAllItems(), 5);
+
+    shoppingList->addItem("Pera", "Frutta", 3);
+    ASSERT_EQ(shoppingList->countAllItems(), 8);
+}
+TEST_F(ShoppingListTest, FindItemsByName) {
+    shoppingList->addItem("Melone", "Frutta", 2);
+    shoppingList->addItem("Banana", "Frutta", 4);
+
+    auto foundItems = shoppingList->findItemsByName("Me");
+    ASSERT_EQ(foundItems.size(), 2);
+
+    auto foundItems2 = shoppingList->findItemsByName("Banana");
+    ASSERT_EQ(foundItems2.size(), 1);
+
+    auto foundItems3 = shoppingList->findItemsByName("Ananas");
+    ASSERT_TRUE(foundItems3.empty());
+}
+
+
 TEST_F(ShoppingListTest, Subscribe) {
     ASSERT_EQ(shoppingList->getObserverCount(), 0);
 

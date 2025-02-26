@@ -79,6 +79,10 @@ std::shared_ptr<ShoppingList> User::getShoppingList(const std::string& listName)
     }
 }
 
+/*bool User::existsShoppingList(const std::string& listName) const {
+    return shoppingLists.find(listName) != shoppingLists.end();
+}*/
+
 std::string User::printShoppingLists() {
     std::ostringstream oss;
     oss << "Liste della spesa dell'utente '" << name << "':\n";

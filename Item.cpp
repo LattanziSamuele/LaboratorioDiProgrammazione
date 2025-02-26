@@ -38,7 +38,7 @@ void Item::setQuantity(int quantity) {
 }
 
 void Item::setIsPurchased(bool isPurchased) {
-    this->purchased = isPurchased;
+    purchased = isPurchased;
 }
 
 void Item::togglePurchased() {

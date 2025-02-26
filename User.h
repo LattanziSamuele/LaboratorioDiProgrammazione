@@ -31,10 +31,11 @@ public:
 
     void shareShoppingList(User& otherUser, const std::string& shoppingListName);
 
-    bool hasSharedShoppingList(const std::string &listName) const;
     std::shared_ptr<ShoppingList> getShoppingList(const std::string& listName) const;
+    //bool existsShoppingList(const std::string& listName) const;
 
     std::string printShoppingLists();
+    //cerca lista con nome, test con lista non esistente
 
 private:
     std::string name;

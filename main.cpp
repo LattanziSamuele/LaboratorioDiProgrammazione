@@ -68,7 +68,6 @@ void deleteShoppingList() {
     std::string listName;
     std::cout << "Inserisci il nome della lista della spesa da eliminare: ";
     std::cin >> listName;
-
     try {
         loggedInUser->removeShoppingList(listName);
         std::cout << "Lista della spesa '" << listName << "' è stata eliminata con successo.\n";
@@ -76,6 +75,7 @@ void deleteShoppingList() {
         std::cerr << "Errore: " << e.what() << "\n";
     }
 }
+
 void addItemToShoppingList() {
     if (!loggedInUser) {
         std::cout << "Devi essere loggato per aggiungere un item a una lista della spesa.\n";
@@ -95,8 +95,7 @@ void addItemToShoppingList() {
     std::cin >> quantity;
 
     try {
-        loggedInUser->getShoppingList(listName)->addItem(itemName, category, quantity);
-        //std::cout << "Item '" << itemName << "' aggiunto alla lista '" << listName << "'.\n";
+        loggedInUser->getShoppingList(listName)->addItem(Item(itemName, category, quantity));
     } catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << "\n";
     }
@@ -117,7 +116,8 @@ void removeItemFromShoppingList() {
 
     try {
         loggedInUser->getShoppingList(listName)->removeItem(itemName);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << "\n";
     }
 }
@@ -135,12 +135,14 @@ void toggleItemPurchased() {
     std::cout << "Inserisci il nome dell'item: ";
     std::cin >> itemName;
 
-    try {
+    try{
         loggedInUser->getShoppingList(listName)->toggleItemPurchased(itemName);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << "\n";
     }
 }
+
 
 void displayShoppingLists() {
     if (!loggedInUser) {
@@ -171,9 +173,9 @@ void displayItemsInShoppingList() {
     try {
         auto shoppingList = loggedInUser->getShoppingList(listName);
         if (choice == 1) {
-            std::cout << shoppingList->printAllItems() << "\n";
+            std::cout << shoppingList->toString() << "\n";
         } else if (choice == 2) {
-            std::cout << shoppingList->printItemsByCategory() << "\n";
+            std::cout << shoppingList->toStringByCategory() << "\n";
         } else {
             std::cout << "Opzione non valida.\n";
         }

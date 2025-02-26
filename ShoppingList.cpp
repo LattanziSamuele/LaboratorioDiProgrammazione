@@ -21,25 +21,37 @@ void ShoppingList::addItem(const std::string& itemName, const std::string& categ
     }
 }
 
-void ShoppingList::removeItem(const std::string& itemName) {
+void ShoppingList::addItem(const Item& newItem) {
+    auto it = items.find(newItem.getName());
+    if (it != items.end() && it->second->getCategory() == newItem.getCategory()) {
+            it->second->setQuantity(it->second->getQuantity() + newItem.getQuantity());
+            notify(ShoppingListEvent::QUANTITY_UPDATED, newItem.getName());
+    } else {
+        auto itemPtr = std::make_shared<Item>(newItem);
+        items.insert(std::make_pair(newItem.getName(), itemPtr));
+        notify(ShoppingListEvent::ITEM_ADDED, newItem.getName());
+    }
+}
+
+bool ShoppingList::removeItem(const std::string& itemName) {
     auto it = items.find(itemName);
     if (it != items.end()){
         it->second->setQuantity(0);
         items.erase(it);
         notify(ShoppingListEvent::ITEM_REMOVED, itemName);
+        return true;
     }
     else
-        throw std::invalid_argument("Hai fornito un nome invalido per l'Item");
+        return false;
 }
-
-void ShoppingList::toggleItemPurchased(const std::string &itemName) {
+bool ShoppingList::toggleItemPurchased(const std::string &itemName) {
     auto it = items.find(itemName);
     if (it != items.end()) {
         it->second->togglePurchased();
         notify(ShoppingListEvent::PURCHASED_STATUS_UPDATED, itemName);
-    } else {
-        throw std::invalid_argument("Hai fornito un nome invalido per l'Item");
-    }
+        return true;
+    } else
+        return false;
 }
 
 void ShoppingList::updateItemQuantity(const std::string& itemName, int newQuantity) {
@@ -85,8 +97,15 @@ int ShoppingList::countUnpurchasedItems() const {
     }
     return count;
 }
+int ShoppingList::countAllItems() const {
+    int totalQuantity = 0;
+    for (const auto& pair : items) {
+        totalQuantity += pair.second->getQuantity();
+    }
+    return totalQuantity;
+}
 
-std::string ShoppingList::printAllItems() const {
+std::string ShoppingList::toString() const {
     std::ostringstream oss;
     for (const auto& pair : items) {
             oss << "Nome: " << pair.second->getName()
@@ -100,7 +119,7 @@ std::string ShoppingList::printAllItems() const {
     return oss.str();
 }
 
-std::string ShoppingList::printItemsByCategory() const {
+std::string ShoppingList::toStringByCategory() const {
     std::map<std::string, std::vector<std::string>> categoryMap;
 
     for (const auto& pair : items) {
@@ -115,4 +134,22 @@ std::string ShoppingList::printItemsByCategory() const {
         }
     }
     return oss.str();
+}
+std::list<std::shared_ptr<Item>> ShoppingList::findItemsByName(const std::string& searchString) const {
+    std::list<std::shared_ptr<Item>> foundItems;
+    if (searchString.empty()) {
+        return foundItems;
+    }
+    for (const auto &pair : items) {
+        const std::shared_ptr<Item> &item = pair.second;
+        if (item->getName().find(searchString) != std::string::npos) {
+            foundItems.push_back(item);
+        }
+    }
+
+    return foundItems;
+}
+
+int ShoppingList::getObserverCount() const {
+    return observers.size();
 }

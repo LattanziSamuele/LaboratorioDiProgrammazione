@@ -30,10 +30,11 @@ public:
     virtual ~ShoppingList() = default;
 
     std::string getName() const;
-
+    // bool remove toggle, aggiungere calcolo ntotale, metodo cercaitem(stringa) rende item con tale stringa
     void addItem(const std::string& itemName, const std::string& category, int quantity);
-    void removeItem(const std::string& itemName);
-    void toggleItemPurchased(const std::string& itemName);
+    void addItem(const Item& newItem);
+    bool removeItem(const std::string& itemName);
+    bool toggleItemPurchased(const std::string& itemName);
     void updateItemQuantity(const std::string& itemName, int newQuantity);
 
     virtual void subscribe(Observer* observer) override;
@@ -41,12 +42,15 @@ public:
     virtual void notify(ShoppingListEvent event, const std::string& itemName = "") override;
 
     int countUnpurchasedItems() const;
-    std::string printAllItems() const;
-    std::string printItemsByCategory() const;
+    int countAllItems() const;
 
-    int getObserverCount() const {
-        return observers.size();
-    }
+    //trasformare in tostring
+    std::string toString() const;
+    std::string toStringByCategory() const;
+    std::list<std::shared_ptr<Item>> findItemsByName(const std::string& searchString) const;
+
+    int getObserverCount() const;
+
 
 private:
     std::string name;
